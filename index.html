@@ -169,11 +169,13 @@ button {
     padding: 4px 7px;
     font-size: 11px;
     font-weight: 700;
+    margin-left: 6px;
 }
 
 .day-date {
     color: #777;
     font-size: 13px;
+    margin-top: 5px;
 }
 
 /* LESSON */
@@ -412,6 +414,7 @@ button {
 /* MOBILE */
 
 @media (max-width: 600px) {
+
     .app {
         padding: 12px;
     }
@@ -445,67 +448,107 @@ button {
 <div class="app">
 
     <div class="header">
+
         <div>
-            <div class="title">Группа 163</div>
-            <div class="subtitle">Расписание и домашние задания</div>
+            <div class="title">
+                Группа 163
+            </div>
+
+            <div class="subtitle">
+                Расписание и домашние задания
+            </div>
         </div>
 
-        <button class="refresh" id="refreshButton">
+        <button
+            class="refresh"
+            id="refreshButton"
+        >
             ↻ Обновить
         </button>
+
     </div>
 
-    <div class="status" id="status">
+    <div
+        class="status"
+        id="status"
+    >
         Загрузка расписания…
     </div>
 
     <div class="tabs">
-        <button class="tab active" id="scheduleTab">
+
+        <button
+            class="tab active"
+            id="scheduleTab"
+        >
             Расписание
         </button>
 
-        <button class="tab" id="homeworkTab">
-            ДЗ <span id="homeworkCount"></span>
+        <button
+            class="tab"
+            id="homeworkTab"
+        >
+            ДЗ
+            <span id="homeworkCount"></span>
         </button>
-    </div>
 
-    <!-- РАСПИСАНИЕ -->
+    </div>
 
     <section id="schedulePage">
 
         <div class="week-control">
 
-            <button class="week-button" id="prevWeek">
+            <button
+                class="week-button"
+                id="prevWeek"
+            >
                 ‹
             </button>
 
             <div class="week-info">
-                <div class="week-title" id="weekTitle">
+
+                <div
+                    class="week-title"
+                    id="weekTitle"
+                >
                     Загрузка…
                 </div>
 
-                <div class="week-dates" id="weekDates"></div>
+                <div
+                    class="week-dates"
+                    id="weekDates"
+                ></div>
 
-                <div class="current-week" id="currentWeekLabel"></div>
+                <div
+                    class="current-week"
+                    id="currentWeekLabel"
+                ></div>
+
             </div>
 
-            <button class="week-button" id="nextWeek">
+            <button
+                class="week-button"
+                id="nextWeek"
+            >
                 ›
             </button>
 
         </div>
 
         <div id="schedule">
+
             <div class="empty">
                 Загружаю расписание…
             </div>
+
         </div>
 
     </section>
 
-    <!-- ДЗ -->
-
-    <section id="homeworkPage" style="display:none">
+    <section
+        id="homeworkPage"
+        style="display:none"
+    >
 
         <div id="homeworkList"></div>
 
@@ -516,7 +559,10 @@ button {
 
 <!-- MODAL ДЗ -->
 
-<div class="modal" id="homeworkModal">
+<div
+    class="modal"
+    id="homeworkModal"
+>
 
     <div class="modal-box">
 
@@ -524,11 +570,16 @@ button {
             Добавить ДЗ
         </div>
 
-        <div class="modal-subtitle" id="selectedLesson"></div>
+        <div
+            class="modal-subtitle"
+            id="selectedLesson"
+        ></div>
 
         <div class="field">
 
-            <label>Предмет</label>
+            <label>
+                Предмет
+            </label>
 
             <input
                 id="homeworkSubject"
@@ -539,7 +590,9 @@ button {
 
         <div class="field">
 
-            <label>Дата</label>
+            <label>
+                Дата
+            </label>
 
             <input
                 id="homeworkDate"
@@ -550,7 +603,9 @@ button {
 
         <div class="field">
 
-            <label>Задание</label>
+            <label>
+                Задание
+            </label>
 
             <textarea
                 id="homeworkText"
@@ -561,7 +616,9 @@ button {
 
         <div class="field">
 
-            <label>Сдать до</label>
+            <label>
+                Сдать до
+            </label>
 
             <input
                 id="homeworkDeadline"
@@ -572,11 +629,17 @@ button {
 
         <div class="modal-buttons">
 
-            <button class="cancel" id="cancelHomework">
+            <button
+                class="cancel"
+                id="cancelHomework"
+            >
                 Отмена
             </button>
 
-            <button class="save" id="saveHomework">
+            <button
+                class="save"
+                id="saveHomework"
+            >
                 Сохранить
             </button>
 
@@ -624,22 +687,34 @@ let selectedLesson = null;
 ========================================================= */
 
 const statusElement =
-    document.getElementById("status");
+    document.getElementById(
+        "status"
+    );
 
 const scheduleElement =
-    document.getElementById("schedule");
+    document.getElementById(
+        "schedule"
+    );
 
 const weekTitle =
-    document.getElementById("weekTitle");
+    document.getElementById(
+        "weekTitle"
+    );
 
 const weekDates =
-    document.getElementById("weekDates");
+    document.getElementById(
+        "weekDates"
+    );
 
 const currentWeekLabel =
-    document.getElementById("currentWeekLabel");
+    document.getElementById(
+        "currentWeekLabel"
+    );
 
 const homeworkModal =
-    document.getElementById("homeworkModal");
+    document.getElementById(
+        "homeworkModal"
+    );
 
 
 /* =========================================================
@@ -648,12 +723,29 @@ const homeworkModal =
 
 function escapeHTML(value) {
 
-    return String(value || "")
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;")
-        .replaceAll("'", "&#039;");
+    return String(
+        value || ""
+    )
+        .replaceAll(
+            "&",
+            "&amp;"
+        )
+        .replaceAll(
+            "<",
+            "&lt;"
+        )
+        .replaceAll(
+            ">",
+            "&gt;"
+        )
+        .replaceAll(
+            '"',
+            "&quot;"
+        )
+        .replaceAll(
+            "'",
+            "&#039;"
+        );
 }
 
 
@@ -684,15 +776,24 @@ function formatShortDate(date) {
 
 function dateToISO(date) {
 
-    const y = date.getFullYear();
+    const y =
+        date.getFullYear();
 
-    const m = String(
-        date.getMonth() + 1
-    ).padStart(2, "0");
+    const m =
+        String(
+            date.getMonth() + 1
+        ).padStart(
+            2,
+            "0"
+        );
 
-    const d = String(
-        date.getDate()
-    ).padStart(2, "0");
+    const d =
+        String(
+            date.getDate()
+        ).padStart(
+            2,
+            "0"
+        );
 
     return `${y}-${m}-${d}`;
 }
@@ -700,8 +801,13 @@ function dateToISO(date) {
 
 function normalizeText(text) {
 
-    return String(text || "")
-        .replace(/\s+/g, " ")
+    return String(
+        text || ""
+    )
+        .replace(
+            /\s+/g,
+            " "
+        )
         .trim();
 }
 
@@ -730,15 +836,19 @@ async function fetchWithTimeout(
             await fetch(
                 url,
                 {
-                    cache: "no-store",
-                    signal: controller.signal
+                    cache:
+                        "no-store",
+
+                    signal:
+                        controller.signal
                 }
             );
 
         if (!response.ok) {
 
             throw new Error(
-                "HTTP " + response.status
+                "HTTP " +
+                response.status
             );
         }
 
@@ -765,45 +875,113 @@ async function downloadSchedule() {
             SOURCE_URL
         );
 
-    const urls = [
+    const attempts = [
 
-        SOURCE_URL,
+        {
+            name:
+                "прямой запрос",
 
-        `https://api.allorigins.win/raw?url=${encoded}`,
+            url:
+                SOURCE_URL,
 
-        `https://corsproxy.io/?url=${encoded}`
+            isHTML:
+                true
+        },
+
+        {
+            name:
+                "Jina Reader",
+
+            url:
+                "https://r.jina.ai/http://spbti.ru/studentam/schedule/451",
+
+            isHTML:
+                false
+        },
+
+        {
+            name:
+                "AllOrigins",
+
+            url:
+                `https://api.allorigins.win/raw?url=${encoded}`,
+
+            isHTML:
+                true
+        },
+
+        {
+            name:
+                "CorsProxy",
+
+            url:
+                `https://corsproxy.io/?url=${encoded}`,
+
+            isHTML:
+                true
+        },
+
+        {
+            name:
+                "CodeTabs",
+
+            url:
+                `https://api.codetabs.com/v1/proxy?quest=${encoded}`,
+
+            isHTML:
+                true
+        }
 
     ];
 
-    let lastError = null;
+    let lastError =
+        null;
 
-    for (const url of urls) {
+    for (
+        const attempt
+        of attempts
+    ) {
 
         try {
 
-            const html =
-                await fetchWithTimeout(url);
+            const text =
+                await fetchWithTimeout(
+                    attempt.url,
+                    20000
+                );
 
             if (
-                html &&
-                html.length > 300
+                text &&
+                text.length > 100
             ) {
 
-                return html;
+                return {
+                    text,
+                    isHTML:
+                        attempt.isHTML,
+                    source:
+                        attempt.name
+                };
             }
 
         } catch (error) {
 
-            lastError = error;
+            lastError =
+                error;
 
+            console.warn(
+                `Не сработал ${attempt.name}:`,
+                error
+            );
         }
-
     }
 
-    throw lastError ||
+    throw (
+        lastError ||
         new Error(
-            "Не удалось получить расписание"
-        );
+            "Не удалось получить расписание ни одним способом"
+        )
+    );
 }
 
 
@@ -811,97 +989,170 @@ async function downloadSchedule() {
    ПАРСИНГ РАСПИСАНИЯ
 ========================================================= */
 
-/*
-    СПбТИ может менять HTML страницы.
+function parseSchedule(source) {
 
-    Поэтому здесь несколько способов
-    найти таблицу расписания.
-*/
+    if (
+        !source ||
+        !source.text
+    ) {
+        return [];
+    }
 
-function parseSchedule(html) {
+    if (
+        source.isHTML !== false
+    ) {
 
-    const documentParser =
-        new DOMParser();
+        const doc =
+            new DOMParser()
+                .parseFromString(
+                    source.text,
+                    "text/html"
+                );
 
-    const doc =
-        documentParser.parseFromString(
-            html,
-            "text/html"
-        );
+        const result = [];
 
-    const result = [];
+        for (
+            const table
+            of [
+                ...doc.querySelectorAll(
+                    "table"
+                )
+            ]
+        ) {
 
-    const tables =
-        [...doc.querySelectorAll("table")];
+            for (
+                const row
+                of [
+                    ...table.querySelectorAll(
+                        "tr"
+                    )
+                ]
+            ) {
 
-    for (const table of tables) {
-
-        const rows =
-            [...table.querySelectorAll("tr")];
-
-        for (const row of rows) {
-
-            const cells =
-                [...row.querySelectorAll("th, td")]
-                .map(
-                    cell =>
-                        normalizeText(
-                            cell.innerText
+                const cells =
+                    [
+                        ...row.querySelectorAll(
+                            "th, td"
                         )
+                    ]
+                        .map(
+                            cell =>
+                                normalizeText(
+                                    cell.innerText
+                                )
+                        );
+
+                if (
+                    cells.length >= 2 &&
+                    cells.some(Boolean)
+                ) {
+
+                    result.push(
+                        cells
+                    );
+                }
+            }
+        }
+
+        if (result.length) {
+
+            const parsed =
+                parseTableSchedule(
+                    result
                 );
 
             if (
-                cells.length >= 2 &&
-                cells.some(
-                    x => x.length > 0
-                )
+                parsed.length
             ) {
-
-                result.push(cells);
+                return parsed;
             }
         }
+
+        return parseTextSchedule(
+            cleanScheduleText(
+                doc.body?.innerText ||
+                doc.documentElement?.innerText ||
+                ""
+            )
+        );
     }
 
-    /*
-        Если таблиц нет,
-        пробуем найти элементы,
-        похожие на расписание.
-    */
-
-    if (!result.length) {
-
-        const text =
-            normalizeText(
-                doc.body?.innerText
-            );
-
-        if (text) {
-
-            return parseTextSchedule(
-                text
-            );
-        }
-    }
-
-    return parseTableSchedule(
-        result
+    return parseTextSchedule(
+        cleanScheduleText(
+            source.text
+        )
     );
 }
 
 
-/*
-    Парсим таблицу.
-*/
+function cleanScheduleText(text) {
+
+    return String(
+        text || ""
+    )
+        .replace(
+            /\r/g,
+            ""
+        )
+        .split("\n")
+        .map(
+            line =>
+                line
+                    .replace(
+                        /^\s*\|\s*/,
+                        ""
+                    )
+                    .replace(
+                        /\s*\|\s*$/,
+                        ""
+                    )
+                    .replace(
+                        /\|/g,
+                        " "
+                    )
+                    .replace(
+                        /\*\*/g,
+                        ""
+                    )
+                    .replace(
+                        /__/g,
+                        ""
+                    )
+                    .replace(
+                        /`/g,
+                        ""
+                    )
+                    .trim()
+        )
+        .filter(
+            line =>
+                line &&
+                !/^[-:| ]+$/.test(
+                    line
+                )
+        )
+        .join("\n");
+}
+
+
+/* =========================================================
+   ПАРСЕР ТАБЛИЦЫ
+========================================================= */
 
 function parseTableSchedule(rows) {
 
     const lessons = [];
 
-    let currentDate = null;
+    let currentDate =
+        null;
 
-    let lessonNumber = 0;
+    let lessonNumber =
+        0;
 
-    for (const row of rows) {
+    for (
+        const row
+        of rows
+    ) {
 
         const joined =
             row.join(" ");
@@ -920,13 +1171,19 @@ function parseTableSchedule(rows) {
         if (dateMatch) {
 
             const day =
-                Number(dateMatch[1]);
+                Number(
+                    dateMatch[1]
+                );
 
             const month =
-                Number(dateMatch[2]) - 1;
+                Number(
+                    dateMatch[2]
+                ) - 1;
 
             const year =
-                Number(dateMatch[3]);
+                Number(
+                    dateMatch[3]
+                );
 
             currentDate =
                 new Date(
@@ -935,13 +1192,9 @@ function parseTableSchedule(rows) {
                     day
                 );
 
-            lessonNumber = 0;
+            lessonNumber =
+                0;
         }
-
-        /*
-            Если дата пока не найдена —
-            строка может быть заголовком.
-        */
 
         if (!currentDate) {
             continue;
@@ -965,10 +1218,14 @@ function parseTableSchedule(rows) {
             row.filter(
                 cell =>
                     cell.length > 2 &&
-                    !/^\d{1,2}[.:]\d{2}/.test(cell)
+                    !/^\d{1,2}[.:]\d{2}/.test(
+                        cell
+                    )
             );
 
-        if (!possibleCells.length) {
+        if (
+            !possibleCells.length
+        ) {
             continue;
         }
 
@@ -976,19 +1233,14 @@ function parseTableSchedule(rows) {
             possibleCells
                 .sort(
                     (a, b) =>
-                        b.length - a.length
+                        b.length -
+                        a.length
                 )[0];
-
-        /*
-            Отбрасываем слишком подозрительные
-            строки.
-        */
 
         if (
             subject.length < 2 ||
             subject.length > 300
         ) {
-
             continue;
         }
 
@@ -998,9 +1250,9 @@ function parseTableSchedule(rows) {
 
             id:
                 crypto.randomUUID
-                ? crypto.randomUUID()
-                : Date.now() +
-                  Math.random(),
+                    ? crypto.randomUUID()
+                    : Date.now() +
+                      Math.random(),
 
             date:
                 dateToISO(
@@ -1028,43 +1280,80 @@ function parseTableSchedule(rows) {
 }
 
 
-/*
-    Резервный текстовый парсер.
-*/
+/* =========================================================
+   РЕЗЕРВНЫЙ ТЕКСТОВЫЙ ПАРСЕР
+========================================================= */
 
 function parseTextSchedule(text) {
 
     const lines =
-        text
+        cleanScheduleText(
+            text
+        )
             .split("\n")
-            .map(normalizeText)
+            .map(
+                normalizeText
+            )
             .filter(Boolean);
 
     const lessons = [];
 
-    let currentDate = null;
+    let currentDate =
+        null;
 
     let number = 0;
 
-    for (const line of lines) {
+    const seen =
+        new Set();
+
+    for (
+        const line
+        of lines
+    ) {
 
         const dateMatch =
             line.match(
-                /(\d{1,2})[./-](\d{1,2})[./-](\d{4})/
+                /(?:^|\D)(\d{1,2})[.\/-](\d{1,2})(?:[.\/-](\d{2,4}))?(?:\D|$)/
             );
 
         if (dateMatch) {
 
-            currentDate =
+            let year =
+                dateMatch[3]
+                    ? Number(
+                        dateMatch[3]
+                    )
+                    : new Date()
+                        .getFullYear();
+
+            if (
+                year < 100
+            ) {
+                year += 2000;
+            }
+
+            const candidate =
                 new Date(
-                    Number(dateMatch[3]),
-                    Number(dateMatch[2]) - 1,
-                    Number(dateMatch[1])
+                    year,
+                    Number(
+                        dateMatch[2]
+                    ) - 1,
+                    Number(
+                        dateMatch[1]
+                    )
                 );
 
-            number = 0;
+            if (
+                !Number.isNaN(
+                    candidate.getTime()
+                )
+            ) {
 
-            continue;
+                currentDate =
+                    candidate;
+
+                number = 0;
+            }
         }
 
         if (!currentDate) {
@@ -1078,29 +1367,65 @@ function parseTextSchedule(text) {
 
         if (
             line.length < 3 ||
-            line.length > 300
+            line.length > 500
         ) {
             continue;
         }
 
-        /*
-            Пропускаем технический мусор.
-        */
+        if (
+            /расписание|группа\s*№?|неделя|личный кабинет|войти|меню|фильтр|понедельник|вторник|среда|четверг|пятница|суббота|воскресенье/i
+                .test(line)
+            &&
+            !timeMatch
+        ) {
+            continue;
+        }
+
+        let subject =
+            line
+                .replace(
+                    /\b\d{1,2}:\d{2}\s*[-–—]\s*\d{1,2}:\d{2}\b/g,
+                    ""
+                )
+                .replace(
+                    /\s{2,}/g,
+                    " "
+                )
+                .trim();
+
+        if (dateMatch) {
+
+            subject =
+                subject
+                    .replace(
+                        dateMatch[0],
+                        ""
+                    )
+                    .trim();
+        }
 
         if (
-            /расписание|группа|неделя|личный кабинет/i
-                .test(line)
+            !subject ||
+            subject.length < 2 ||
+            /^[-–—|:;,.]+$/.test(
+                subject
+            ) ||
+            /^\d+$/.test(
+                subject
+            )
         ) {
             continue;
         }
 
         number++;
 
-        lessons.push({
+        const lesson = {
 
             id:
-                Date.now() +
-                Math.random(),
+                crypto.randomUUID
+                    ? crypto.randomUUID()
+                    : Date.now() +
+                      Math.random(),
 
             date:
                 dateToISO(
@@ -1114,10 +1439,26 @@ function parseTextSchedule(text) {
                     ? timeMatch[0]
                     : "",
 
-            subject:
-                line
+            subject
+        };
 
-        });
+        const key =
+            `${lesson.date}|${lesson.time}|${lesson.subject}`;
+
+        if (
+            !seen.has(key)
+        ) {
+
+            seen.add(key);
+
+            lessons.push(
+                lesson
+            );
+
+        } else {
+
+            number--;
+        }
     }
 
     return lessons;
@@ -1146,7 +1487,10 @@ function getMonday(date) {
     );
 
     d.setHours(
-        0, 0, 0, 0
+        0,
+        0,
+        0,
+        0
     );
 
     return d;
@@ -1171,7 +1515,10 @@ function buildWeeks() {
     const map =
         new Map();
 
-    for (const lesson of schedule) {
+    for (
+        const lesson
+        of schedule
+    ) {
 
         const date =
             new Date(
@@ -1179,18 +1526,27 @@ function buildWeeks() {
             );
 
         const monday =
-            getMonday(date);
+            getMonday(
+                date
+            );
 
         const key =
-            dateToISO(monday);
+            dateToISO(
+                monday
+            );
 
-        if (!map.has(key)) {
+        if (
+            !map.has(key)
+        ) {
 
             map.set(
                 key,
                 {
-                    start: monday,
-                    lessons: []
+                    start:
+                        monday,
+
+                    lessons:
+                        []
                 }
             );
         }
@@ -1198,22 +1554,24 @@ function buildWeeks() {
         map
             .get(key)
             .lessons
-            .push(lesson);
+            .push(
+                lesson
+            );
     }
 
     weeks =
-        [...map.values()]
-        .sort(
-            (a,b) =>
-                a.start - b.start
-        );
+        [
+            ...map.values()
+        ]
+            .sort(
+                (a, b) =>
+                    a.start -
+                    b.start
+            );
 
-    /*
-        Если расписание пустое —
-        создаём текущую неделю.
-    */
-
-    if (!weeks.length) {
+    if (
+        !weeks.length
+    ) {
 
         weeks = [
 
@@ -1223,7 +1581,8 @@ function buildWeeks() {
                         new Date()
                     ),
 
-                lessons: []
+                lessons:
+                    []
             }
 
         ];
@@ -1241,24 +1600,30 @@ function buildWeeks() {
             week =>
                 dateToISO(
                     week.start
-                ) === currentMonday
+                ) ===
+                currentMonday
         );
 
-    if (found >= 0) {
+    if (
+        found >= 0
+    ) {
 
         currentWeekIndex =
             found;
 
     } else {
 
-        currentWeekIndex =
-            Math.max(
-                0,
-                weeks.findIndex(
-                    week =>
-                        week.start > new Date()
-                )
+        const next =
+            weeks.findIndex(
+                week =>
+                    week.start >
+                    new Date()
             );
+
+        currentWeekIndex =
+            next >= 0
+                ? next
+                : 0;
     }
 }
 
@@ -1270,21 +1635,33 @@ function buildWeeks() {
 function renderWeek() {
 
     const week =
-        weeks[currentWeekIndex];
+        weeks[
+            currentWeekIndex
+        ];
 
-    if (!week) return;
+    if (!week) {
+        return;
+    }
 
     const start =
         week.start;
 
     const end =
-        getSunday(start);
+        getSunday(
+            start
+        );
 
     weekTitle.textContent =
-        `Неделя ${currentWeekIndex + 1}`;
+        `Неделя ${
+            currentWeekIndex + 1
+        }`;
 
     weekDates.textContent =
-        `${formatShortDate(start)} — ${formatShortDate(end)}`;
+        `${
+            formatShortDate(start)
+        } — ${
+            formatShortDate(end)
+        }`;
 
     const todayMonday =
         dateToISO(
@@ -1307,12 +1684,8 @@ function renderWeek() {
             "";
     }
 
-    /*
-        Создаём 7 дней,
-        даже если в какой-то день нет пар.
-    */
-
-    let html = "";
+    let html =
+        "";
 
     for (
         let i = 0;
@@ -1324,20 +1697,24 @@ function renderWeek() {
             new Date(start);
 
         date.setDate(
-            start.getDate() + i
+            start.getDate() +
+            i
         );
 
         const iso =
-            dateToISO(date);
+            dateToISO(
+                date
+            );
 
         const lessons =
             week.lessons
                 .filter(
                     lesson =>
-                        lesson.date === iso
+                        lesson.date ===
+                        iso
                 )
                 .sort(
-                    (a,b) =>
+                    (a, b) =>
                         a.number -
                         b.number
                 );
@@ -1352,28 +1729,37 @@ function renderWeek() {
             date.toLocaleDateString(
                 "ru-RU",
                 {
-                    weekday: "long"
+                    weekday:
+                        "long"
                 }
             );
 
         html += `
 
-            <div class="day ${isToday ? "today" : ""}">
+            <div class="day ${
+                isToday
+                    ? "today"
+                    : ""
+            }">
 
                 <div class="day-header">
 
                     <div>
 
                         <div class="day-name">
-                            ${escapeHTML(
-                                dayName[0].toUpperCase() +
-                                dayName.slice(1)
-                            )}
+
+                            ${
+                                escapeHTML(
+                                    dayName[0]
+                                        .toUpperCase() +
+                                    dayName.slice(1)
+                                )
+                            }
 
                             ${
                                 isToday
-                                ? `<span class="today-label">СЕГОДНЯ</span>`
-                                : ""
+                                    ? `<span class="today-label">СЕГОДНЯ</span>`
+                                    : ""
                             }
 
                         </div>
@@ -1385,22 +1771,30 @@ function renderWeek() {
                     </div>
 
                 </div>
-
         `;
 
-        if (!lessons.length) {
+        if (
+            !lessons.length
+        ) {
 
             html += `
+
                 <div class="lesson">
+
                     <div style="color:#666">
                         Пар нет
                     </div>
+
                 </div>
+
             `;
 
         } else {
 
-            for (const lesson of lessons) {
+            for (
+                const lesson
+                of lessons
+            ) {
 
                 html += `
 
@@ -1409,15 +1803,19 @@ function renderWeek() {
                         <div class="lesson-top">
 
                             <div class="lesson-number">
-                                ${lesson.number}
+                                ${
+                                    lesson.number
+                                }
                             </div>
 
                             <div class="lesson-content">
 
                                 <div class="lesson-name">
-                                    ${escapeHTML(
-                                        lesson.subject
-                                    )}
+                                    ${
+                                        escapeHTML(
+                                            lesson.subject
+                                        )
+                                    }
                                 </div>
 
                                 <div class="lesson-meta">
@@ -1437,7 +1835,9 @@ function renderWeek() {
 
                                     <button
                                         class="add-homework"
-                                        data-lesson-id="${lesson.id}"
+                                        data-lesson-id="${
+                                            lesson.id
+                                        }"
                                     >
                                         + ДЗ
                                     </button>
@@ -1462,39 +1862,36 @@ function renderWeek() {
     scheduleElement.innerHTML =
         html;
 
-    /*
-        Назначаем кнопкам ДЗ
-    */
-
     document
         .querySelectorAll(
             ".add-homework"
         )
-        .forEach(button => {
+        .forEach(
+            button => {
 
-            button.addEventListener(
-                "click",
-                () => {
+                button.addEventListener(
+                    "click",
+                    () => {
 
-                    const lesson =
-                        schedule.find(
-                            x =>
-                                String(x.id) ===
-                                String(
-                                    button.dataset.lessonId
-                                )
-                        );
+                        const lesson =
+                            schedule.find(
+                                x =>
+                                    String(x.id) ===
+                                    String(
+                                        button.dataset.lessonId
+                                    )
+                            );
 
-                    if (lesson) {
+                        if (lesson) {
 
-                        openHomework(
-                            lesson
-                        );
+                            openHomework(
+                                lesson
+                            );
+                        }
                     }
-                }
-            );
-
-        });
+                );
+            }
+        );
 }
 
 
@@ -1504,21 +1901,28 @@ function renderWeek() {
 
 function saveCache(html) {
 
-    localStorage.setItem(
+    try {
 
-        CACHE_KEY,
+        localStorage.setItem(
+            CACHE_KEY,
+            JSON.stringify({
 
-        JSON.stringify({
+                savedAt:
+                    Date.now(),
 
-            savedAt:
-                Date.now(),
+                html:
+                    html
 
-            html:
-                html
+            })
+        );
 
-        })
+    } catch (error) {
 
-    );
+        console.warn(
+            "Не удалось сохранить кэш:",
+            error
+        );
+    }
 }
 
 
@@ -1533,7 +1937,10 @@ function loadCache() {
                 )
             );
 
-        return data?.html || null;
+        return (
+            data?.html ||
+            null
+        );
 
     } catch {
 
@@ -1543,7 +1950,7 @@ function loadCache() {
 
 
 /* =========================================================
-   ОБНОВЛЕНИЕ
+   ОБНОВЛЕНИЕ РАСПИСАНИЯ
 ========================================================= */
 
 async function updateSchedule() {
@@ -1556,17 +1963,13 @@ async function updateSchedule() {
 
     try {
 
-        const html =
+        const downloaded =
             await downloadSchedule();
 
-        /*
-            Проверяем, действительно ли
-            получили страницу расписания.
-        */
-
         if (
-            !html ||
-            html.length < 300
+            !downloaded ||
+            !downloaded.text ||
+            downloaded.text.length < 100
         ) {
 
             throw new Error(
@@ -1574,29 +1977,31 @@ async function updateSchedule() {
             );
         }
 
-        saveCache(html);
-
         const parsed =
-            parseSchedule(html);
+            parseSchedule(
+                downloaded
+            );
 
-        if (!parsed.length) {
-
-            /*
-                Не затираем старое
-                расписание плохим парсингом.
-            */
+        if (
+            !parsed.length
+        ) {
 
             const cached =
                 loadCache();
 
-            if (!schedule.length) {
+            if (
+                !schedule.length
+            ) {
 
                 schedule =
                     cached
-                    ? parseSchedule(
-                        cached
-                    )
-                    : [];
+                        ? parseSchedule({
+                            text:
+                                cached,
+                            isHTML:
+                                true
+                        })
+                        : [];
             }
 
             statusElement.textContent =
@@ -1613,18 +2018,30 @@ async function updateSchedule() {
         }
 
         /*
-            Проверяем, изменилось ли
-            расписание.
+            ВАЖНО:
+            сохраняем кэш только после
+            успешного распознавания.
         */
+
+        saveCache(
+            downloaded.text
+        );
 
         const oldData =
             JSON.stringify(
                 schedule.map(
                     x => ({
-                        date:x.date,
-                        number:x.number,
-                        time:x.time,
-                        subject:x.subject
+                        date:
+                            x.date,
+
+                        number:
+                            x.number,
+
+                        time:
+                            x.time,
+
+                        subject:
+                            x.subject
                     })
                 )
             );
@@ -1633,16 +2050,24 @@ async function updateSchedule() {
             JSON.stringify(
                 parsed.map(
                     x => ({
-                        date:x.date,
-                        number:x.number,
-                        time:x.time,
-                        subject:x.subject
+                        date:
+                            x.date,
+
+                        number:
+                            x.number,
+
+                        time:
+                            x.time,
+
+                        subject:
+                            x.subject
                     })
                 )
             );
 
         const changed =
-            oldData !== newData;
+            oldData !==
+            newData;
 
         schedule =
             parsed;
@@ -1653,8 +2078,8 @@ async function updateSchedule() {
 
         statusElement.textContent =
             changed
-                ? "Расписание обновлено — на сайте были изменения."
-                : "Расписание актуально.";
+                ? `Расписание обновлено (${downloaded.source}).`
+                : `Расписание актуально (${downloaded.source}).`;
 
         statusElement.className =
             "status online";
@@ -1666,10 +2091,6 @@ async function updateSchedule() {
             error
         );
 
-        /*
-            Пробуем старый кэш.
-        */
-
         const cached =
             loadCache();
 
@@ -1679,17 +2100,32 @@ async function updateSchedule() {
         ) {
 
             schedule =
-                parseSchedule(
-                    cached
-                );
+                parseSchedule({
+                    text:
+                        cached,
+
+                    isHTML:
+                        true
+                });
 
             buildWeeks();
 
             renderWeek();
         }
 
-        statusElement.textContent =
-            "Нет соединения с сайтом. Показано последнее сохранённое расписание.";
+        if (
+            schedule.length
+        ) {
+
+            statusElement.textContent =
+                "Нет соединения с сайтом. Показано последнее сохранённое расписание.";
+
+        } else {
+
+            statusElement.textContent =
+                "Не удалось загрузить расписание. Проверь интернет-соединение.";
+
+        }
 
         statusElement.className =
             "status error";
@@ -1698,18 +2134,20 @@ async function updateSchedule() {
 
 
 /* =========================================================
-   ДЗ
+   ДОМАШНИЕ ЗАДАНИЯ
 ========================================================= */
 
 function getHomework() {
 
     try {
 
-        return JSON.parse(
-            localStorage.getItem(
-                HOMEWORK_KEY
-            )
-        ) || [];
+        return (
+            JSON.parse(
+                localStorage.getItem(
+                    HOMEWORK_KEY
+                )
+            ) || []
+        );
 
     } catch {
 
@@ -1721,11 +2159,10 @@ function getHomework() {
 function saveHomework(data) {
 
     localStorage.setItem(
-
         HOMEWORK_KEY,
-
-        JSON.stringify(data)
-
+        JSON.stringify(
+            data
+        )
     );
 }
 
@@ -1737,7 +2174,8 @@ function updateHomeworkCount() {
 
     const count =
         data.filter(
-            x => !x.done
+            x =>
+                !x.done
         ).length;
 
     document.getElementById(
@@ -1759,7 +2197,9 @@ function renderHomework() {
     const data =
         getHomework();
 
-    if (!data.length) {
+    if (
+        !data.length
+    ) {
 
         container.innerHTML = `
 
@@ -1782,79 +2222,92 @@ function renderHomework() {
     }
 
     data.sort(
-        (a,b) =>
+        (a, b) =>
             new Date(a.date) -
             new Date(b.date)
     );
 
     container.innerHTML =
-        data.map(
-            (item,index) => `
+        data
+            .map(
+                (item, index) => `
 
-                <div class="
-                    homework-card
-                    ${item.done ? "homework-done" : ""}
-                ">
-
-                    <div class="homework-subject">
-
-                        ${escapeHTML(
-                            item.subject
-                        )}
-
-                    </div>
-
-                    <div class="homework-meta">
-
-                        Пара:
-                        ${escapeHTML(
-                            item.date
-                        )}
-
+                    <div class="
+                        homework-card
                         ${
-                            item.deadline
-                            ? " · Сдать до " +
-                              escapeHTML(
-                                  item.deadline
-                              )
-                            : ""
+                            item.done
+                                ? "homework-done"
+                                : ""
                         }
+                    ">
 
-                    </div>
+                        <div class="homework-subject">
 
-                    <div class="homework-text">
-
-                        ${escapeHTML(
-                            item.text
-                        )}
-
-                    </div>
-
-                    <div class="homework-buttons">
-
-                        <button
-                            onclick="toggleHomework(${index})"
-                        >
                             ${
-                                item.done
-                                ? "Вернуть"
-                                : "Сделано"
+                                escapeHTML(
+                                    item.subject
+                                )
                             }
-                        </button>
 
-                        <button
-                            onclick="deleteHomework(${index})"
-                        >
-                            Удалить
-                        </button>
+                        </div>
+
+                        <div class="homework-meta">
+
+                            Пара:
+                            ${
+                                escapeHTML(
+                                    item.date
+                                )
+                            }
+
+                            ${
+                                item.deadline
+                                    ? " · Сдать до " +
+                                      escapeHTML(
+                                          item.deadline
+                                      )
+                                    : ""
+                            }
+
+                        </div>
+
+                        <div class="homework-text">
+
+                            ${
+                                escapeHTML(
+                                    item.text
+                                )
+                            }
+
+                        </div>
+
+                        <div class="homework-buttons">
+
+                            <button
+                                onclick="toggleHomework(${index})"
+                            >
+
+                                ${
+                                    item.done
+                                        ? "Вернуть"
+                                        : "Сделано"
+                                }
+
+                            </button>
+
+                            <button
+                                onclick="deleteHomework(${index})"
+                            >
+                                Удалить
+                            </button>
+
+                        </div>
 
                     </div>
 
-                </div>
-
-            `
-        )
-        .join("");
+                `
+            )
+            .join("");
 
     updateHomeworkCount();
 }
@@ -1866,10 +2319,18 @@ function(index) {
     const data =
         getHomework();
 
+    if (
+        !data[index]
+    ) {
+        return;
+    }
+
     data[index].done =
         !data[index].done;
 
-    saveHomework(data);
+    saveHomework(
+        data
+    );
 
     renderHomework();
 };
@@ -1881,12 +2342,20 @@ function(index) {
     const data =
         getHomework();
 
+    if (
+        !data[index]
+    ) {
+        return;
+    }
+
     data.splice(
         index,
         1
     );
 
-    saveHomework(data);
+    saveHomework(
+        data
+    );
 
     renderHomework();
 };
@@ -1896,7 +2365,9 @@ function(index) {
    ОКНО ДОБАВЛЕНИЯ ДЗ
 ========================================================= */
 
-function openHomework(lesson) {
+function openHomework(
+    lesson
+) {
 
     selectedLesson =
         lesson;
@@ -1924,9 +2395,10 @@ function openHomework(lesson) {
     document.getElementById(
         "selectedLesson"
     ).textContent =
-        `${lesson.date} ${
+        `${lesson.date}${
             lesson.time
-                ? " · " + lesson.time
+                ? " · " +
+                  lesson.time
                 : ""
         }`;
 
@@ -1965,7 +2437,9 @@ document.getElementById(
     "click",
     () => {
 
-        if (!selectedLesson) {
+        if (
+            !selectedLesson
+        ) {
             return;
         }
 
@@ -2011,11 +2485,32 @@ document.getElementById(
 
         });
 
-        saveHomework(data);
+        saveHomework(
+            data
+        );
 
         closeHomework();
 
         renderHomework();
+    }
+);
+
+
+/* =========================================================
+   ЗАКРЫТИЕ MODAL ПО ФОНУ
+========================================================= */
+
+homeworkModal.addEventListener(
+    "click",
+    event => {
+
+        if (
+            event.target ===
+            homeworkModal
+        ) {
+
+            closeHomework();
+        }
     }
 );
 
@@ -2062,7 +2557,7 @@ document.getElementById(
 
 
 /* =========================================================
-   ВКЛАДКИ
+   ВКЛАДКА РАСПИСАНИЕ
 ========================================================= */
 
 document.getElementById(
@@ -2073,11 +2568,15 @@ document.getElementById(
 
         document.getElementById(
             "scheduleTab"
-        ).classList.add("active");
+        ).classList.add(
+            "active"
+        );
 
         document.getElementById(
             "homeworkTab"
-        ).classList.remove("active");
+        ).classList.remove(
+            "active"
+        );
 
         document.getElementById(
             "schedulePage"
@@ -2092,6 +2591,10 @@ document.getElementById(
 );
 
 
+/* =========================================================
+   ВКЛАДКА ДЗ
+========================================================= */
+
 document.getElementById(
     "homeworkTab"
 ).addEventListener(
@@ -2100,11 +2603,15 @@ document.getElementById(
 
         document.getElementById(
             "homeworkTab"
-        ).classList.add("active");
+        ).classList.add(
+            "active"
+        );
 
         document.getElementById(
             "scheduleTab"
-        ).classList.remove("active");
+        ).classList.remove(
+            "active"
+        );
 
         document.getElementById(
             "schedulePage"
@@ -2150,11 +2657,17 @@ async function start() {
     if (cached) {
 
         const parsed =
-            parseSchedule(
-                cached
-            );
+            parseSchedule({
+                text:
+                    cached,
 
-        if (parsed.length) {
+                isHTML:
+                    true
+            });
+
+        if (
+            parsed.length
+        ) {
 
             schedule =
                 parsed;
