@@ -1,164 +1,478 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Группа 163 — расписание и задания</title>
-<style>
-*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#0b0d12;color:#f2f4f8}
-.wrap{max-width:1000px;margin:auto;padding:24px}.top{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}
-h1{margin:0;font-size:28px}.muted{color:#8e96a3;font-size:13px}
-button{border:1px solid #2b3140;background:#171b24;color:#fff;border-radius:12px;padding:10px 14px;cursor:pointer}
-button:hover{background:#202634}.tabs{display:flex;gap:8px;margin:22px 0;flex-wrap:wrap}.tab.active{background:#fff;color:#0b0d12}
-.panel{background:#11151d;border:1px solid #252b37;border-radius:18px;padding:18px;margin-bottom:18px}
-.status{padding:10px 12px;border-radius:10px;background:#171c26;color:#aeb6c3;font-size:13px;margin-bottom:14px}
-.day{border:1px solid #262d39;border-radius:15px;margin:12px 0;overflow:hidden}.day.today{border-color:#6f7cff}
-.dayhead{padding:13px 15px;background:#171c25;display:flex;justify-content:space-between;gap:10px}
-.badge{font-size:11px;padding:4px 8px;border-radius:99px;background:#28305a;color:#bfc6ff}.lessons{padding:0 15px}
-.lesson{padding:14px 0;border-bottom:1px solid #242a34;display:grid;grid-template-columns:70px 1fr;gap:14px}.lesson:last-child{border-bottom:0}
-.time{color:#8e96a3;font-variant-numeric:tabular-nums}.subject{font-weight:650}.teacher,.room{color:#929aa7;font-size:13px;margin-top:4px}
-.empty{padding:28px;text-align:center;color:#8e96a3}
-.taskrow{display:flex;gap:10px;margin-bottom:14px}.taskrow input{flex:1;min-width:0;background:#0b0e14;border:1px solid #2b3140;color:#fff;border-radius:12px;padding:12px}
-.task{display:flex;align-items:center;gap:10px;padding:11px 0;border-bottom:1px solid #242a34}.task.done .txt{text-decoration:line-through;color:#737b89}.del{margin-left:auto;padding:6px 9px}
-.small{font-size:12px;color:#7f8794}
-pre{white-space:pre-wrap;word-break:break-word;color:#c7ced9;font-size:12px;max-height:300px;overflow:auto}
-@media(max-width:600px){.wrap{padding:14px}h1{font-size:23px}.lesson{grid-template-columns:58px 1fr}}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Группа 163 — расписание и задания</title>
+    <meta name="theme-color" content="#3b82f6">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Группа 163">
+    
+    <link rel="manifest" href='data:application/manifest+json;charset=utf-8,{"name":"Группа 163","short_name":"Группа 163","start_url":".","display":"standalone","background_color":"%23f3f4f6","theme_color":"%233b82f6","icons":[{"src":"data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 192 192%22><rect width=%22192%22 height=%22192%22 fill=%22%233b82f6%22/><text x=%2296%22 y=%22120%22 font-size=%22100%22 text-anchor=%22middle%22 fill=%22white%22 font-family=%22Arial%22 font-weight=%22bold%22>163</text></svg>","sizes":"192x192","type":"image/svg+xml"},{"src":"data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 512 512%22><rect width=%22512%22 height=%22512%22 fill=%22%233b82f6%22/><text x=%22256%22 y=%22320%22 font-size=%22260%22 text-anchor=%22middle%22 fill=%22white%22 font-family=%22Arial%22 font-weight=%22bold%22>163</text></svg>","sizes":"512x512","type":"image/svg+xml"}]}'>
+    
+    <link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="%233b82f6"/><text x="50" y="65" font-size="50" text-anchor="middle" fill="white" font-family="Arial" font-weight="bold">163</text></svg>'>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .tab-active { border-bottom: 2px solid #3b82f6; color: #3b82f6; font-weight: bold; }
+        .modal { display: none; }
+        .modal.active { display: flex; }
+        .install-btn { display: none; }
+        .install-btn.show { display: inline-block; }
+    </style>
 </head>
-<body>
-<div class="wrap">
-  <div class="top">
-    <div><h1>Группа 163</h1><div class="muted">Расписание + задания</div></div>
-    <button id="refresh">↻ Обновить</button>
-  </div>
+<body class="bg-gray-100 text-gray-800 min-h-screen p-4">
+    <div class="max-w-4xl mx-auto bg-white rounded-xl shadow-md p-6">
+        <div class="flex justify-between items-center mb-4">
+            <h1 class="text-2xl font-bold">Группа 163</h1>
+            <button id="install-button" class="install-btn bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-600 text-sm">
+                📱 Установить
+            </button>
+        </div>
+        
+        <div class="flex border-b mb-6">
+            <button id="tab-schedule" onclick="switchTab('schedule')" class="px-4 py-2 tab-active">Расписание</button>
+            <button id="tab-homework" onclick="switchTab('homework')" class="px-4 py-2 text-gray-500">Задания</button>
+        </div>
 
-  <div class="tabs">
-    <button class="tab active" data-tab="schedule">Расписание</button>
-    <button class="tab" data-tab="tasks">Задания</button>
-  </div>
+        <div id="content-schedule">
+            <div class="flex justify-between items-center mb-4">
+                <p class="text-sm text-gray-500">Источник: spbti.ru/studentam/schedule/451 · обновление каждые 5 минут.</p>
+                <button onclick="fetchSchedule()" class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 text-sm">↻ Обновить</button>
+            </div>
+            <div id="schedule-container" class="text-center text-gray-500 py-10">
+                Загрузка расписания… Подождите…
+            </div>
+        </div>
 
-  <section id="schedule" class="panel">
-    <div id="status" class="status">Загрузка расписания…</div>
-    <div id="scheduleBox"><div class="empty">Подождите…</div></div>
-    <div class="small">Источник: spbti.ru/studentam/schedule/451 · обновление каждые 5 минут.</div>
-  </section>
-
-  <section id="tasks" class="panel" hidden>
-    <div class="taskrow">
-      <input id="taskInput" placeholder="Например: сделать лабораторную по химии">
-      <button id="addTask">Добавить</button>
+        <div id="content-homework" class="hidden">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-semibold">Домашние задания</h2>
+                <div class="flex space-x-2">
+                    <button onclick="exportHomework()" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 text-sm">💾 Скачать</button>
+                    <button onclick="openModal()" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">+ Добавить</button>
+                </div>
+            </div>
+            <div id="homework-list" class="space-y-3"></div>
+        </div>
     </div>
-    <div id="tasksBox"></div>
-  </section>
-</div>
 
-<script>
-const SOURCE='https://spbti.ru/studentam/schedule/451';
-const CACHE='group163_schedule_v1';
-const TASKS='group163_tasks_v1';
+    <div id="hw-modal" class="modal fixed inset-0 bg-black bg-opacity-50 items-center justify-center z-50">
+        <div class="bg-white p-6 rounded-lg shadow-xl w-full max-w-md">
+            <h3 class="text-lg font-bold mb-4">Добавить задание</h3>
+            <form id="hw-form" onsubmit="addHomework(event)">
+                <div class="mb-3">
+                    <label class="block text-sm font-medium mb-1">Предмет</label>
+                    <select id="hw-subject" class="w-full border rounded p-2" required>
+                        <option value="">-- Выберите предмет --</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label class="block text-sm font-medium mb-1">Задание</label>
+                    <textarea id="hw-task" class="w-full border rounded p-2" rows="3" required></textarea>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium mb-1">Сдать до</label>
+                    <input type="date" id="hw-date" class="w-full border rounded p-2" required>
+                </div>
+                <div class="flex justify-end space-x-2">
+                    <button type="button" onclick="closeModal()" class="px-4 py-2 text-gray-600 hover:text-gray-800">Отмена</button>
+                    <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Сохранить</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
-function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
-function saveCache(html){try{localStorage.setItem(CACHE,JSON.stringify({time:Date.now(),html}))}catch{}}
-function loadCache(){try{return JSON.parse(localStorage.getItem(CACHE)||'null')}catch{return null}}
+    <script>
+        if ('serviceWorker' in navigator) {
+            const swCode = `
+                const CACHE = 'group163-v1';
+                self.addEventListener('install', e => self.skipWaiting());
+                self.addEventListener('activate', e => self.clients.claim());
+                self.addEventListener('fetch', e => {
+                    e.respondWith(
+                        caches.open(CACHE).then(cache =>
+                            cache.match(e.request).then(cached => {
+                                const fetchPromise = fetch(e.request).then(response => {
+                                    if (response && response.status === 200) cache.put(e.request, response.clone());
+                                    return response;
+                                }).catch(() => cached);
+                                return cached || fetchPromise;
+                            })
+                        )
+                    );
+                });
+            `;
+            const swBlob = new Blob([swCode], { type: 'application/javascript' });
+            const swUrl = URL.createObjectURL(swBlob);
+            navigator.serviceWorker.register(swUrl).catch(() => {});
+        }
 
-async function getSource(){
-  const urls=[
-    SOURCE,
-    'https://api.allorigins.win/raw?url='+encodeURIComponent(SOURCE),
-    'https://corsproxy.io/?url='+encodeURIComponent(SOURCE)
-  ];
-  let last;
-  for(const u of urls){
-    try{
-      const r=await fetch(u,{cache:'no-store'});
-      if(!r.ok) throw new Error('HTTP '+r.status);
-      const t=await r.text();
-      if(t && t.length>500) return t;
-    }catch(e){last=e}
-  }
-  throw last||new Error('Не удалось загрузить расписание');
-}
+        let scheduleData = null;
+        const fallbackSubjects = ["Математика", "Физика", "Информатика", "История", "Английский язык", "Русский язык"];
+        let deferredPrompt = null;
 
-function parseSchedule(raw){
-  const doc=new DOMParser().parseFromString(raw,'text/html');
-  // Remove navigation/scripts and collect visible text.
-  doc.querySelectorAll('script,style,noscript,svg,nav,header,footer').forEach(x=>x.remove());
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            document.getElementById('install-button').classList.add('show');
+        });
 
-  // First try tables — university schedules are commonly published as tables.
-  const tables=[...doc.querySelectorAll('table')];
-  let best=tables.sort((a,b)=>b.innerText.length-a.innerText.length)[0];
-  if(best && best.innerText.trim().length>80){
-    const rows=[...best.querySelectorAll('tr')].map(tr=>[...tr.querySelectorAll('th,td')].map(x=>x.innerText.replace(/\s+/g,' ').trim()).filter(Boolean)).filter(r=>r.length);
-    if(rows.length) return renderTable(rows);
-  }
+        document.getElementById('install-button').addEventListener('click', async () => {
+            if (!deferredPrompt) return;
+            deferredPrompt.prompt();
+            await deferredPrompt.userChoice;
+            document.getElementById('install-button').classList.remove('show');
+            deferredPrompt = null;
+        });
 
-  // Fallback: show the useful text from the page, with links preserved as plain text.
-  const text=doc.body?.innerText?.replace(/\n{3,}/g,'\n\n').trim()||'';
-  return `<div class="empty">Не удалось автоматически распознать таблицу расписания.<br><br><pre>${esc(text.slice(0,12000))}</pre></div>`;
-}
+        function switchTab(tab) {
+            document.getElementById('content-schedule').classList.toggle('hidden', tab !== 'schedule');
+            document.getElementById('content-homework').classList.toggle('hidden', tab !== 'homework');
+            document.getElementById('tab-schedule').classList.toggle('tab-active', tab === 'schedule');
+            document.getElementById('tab-homework').classList.toggle('tab-active', tab === 'homework');
+            document.getElementById('tab-schedule').classList.toggle('text-gray-500', tab !== 'schedule');
+            document.getElementById('tab-homework').classList.toggle('text-gray-500', tab !== 'homework');
+        }
 
-function renderTable(rows){
-  let html='<div style="overflow:auto"><table style="width:100%;border-collapse:collapse;font-size:14px">';
-  rows.forEach((r,i)=>{
-    html+='<tr>'+r.map(c=>`<${i===0?'th':'td'} style="text-align:left;padding:10px;border-bottom:1px solid #252b37;vertical-align:top">${esc(c)}</${i===0?'th':'td'}>`).join('')+'</tr>';
-  });
-  return html+'</table></div>';
-}
+        async function fetchSchedule() {
+            const container = document.getElementById('schedule-container');
+            container.innerHTML = '<p class="text-gray-500">Загрузка расписания с сайта… Подождите…</p>';
+            
+            const targetUrl = "https://spbti.ru/studentam/schedule/451";
+            const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(targetUrl)}`;
 
-async function refresh(){
-  const status=document.getElementById('status');
-  status.textContent='Загрузка расписания…';
-  try{
-    const raw=await getSource();
-    const rendered=parseSchedule(raw);
-    saveCache(rendered);
-    document.getElementById('scheduleBox').innerHTML=rendered;
-    status.textContent='Расписание обновлено: '+new Date().toLocaleString('ru-RU');
-  }catch(e){
-    const c=loadCache();
-    if(c){
-      document.getElementById('scheduleBox').innerHTML=c.html;
-      status.textContent='Интернет недоступен. Показана последняя сохранённая версия.';
-    }else{
-      document.getElementById('scheduleBox').innerHTML='<div class="empty">Не удалось загрузить расписание.<br>Откройте страницу с интернетом и нажмите «Обновить».</div>';
-      status.textContent='Ошибка загрузки расписания.';
-    }
-  }
-}
+            try {
+                const response = await fetch(proxyUrl);
+                if (!response.ok) throw new Error('Ошибка сети');
+                const html = await response.text();
+                
+                // Парсим HTML и извлекаем расписание
+                const parsed = parseScheduleFromHTML(html);
+                
+                if (parsed && Object.keys(parsed).length > 0) {
+                    scheduleData = parsed;
+                    renderSchedule();
+                    populateSubjects();
+                } else {
+                    throw new Error('Не удалось распарсить расписание');
+                }
+            } catch (error) {
+                console.error("Ошибка загрузки расписания:", error.message);
+                container.innerHTML = `
+                    <div class="text-red-500 py-10">
+                        <p class="font-bold mb-2">⚠️ Не удалось загрузить расписание с сайта</p>
+                        <p class="text-sm text-gray-600 mb-4">Возможно, сайт изменил структуру или временно недоступен.</p>
+                        <button onclick="loadFallbackSchedule()" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                            Загрузить тестовое расписание
+                        </button>
+                    </div>
+                `;
+            }
+        }
 
-function tasks(){try{return JSON.parse(localStorage.getItem(TASKS)||'[]')}catch{return[]}}
-function saveTasks(a){localStorage.setItem(TASKS,JSON.stringify(a))}
-function renderTasks(){
-  const box=document.getElementById('tasksBox'), a=tasks();
-  if(!a.length){box.innerHTML='<div class="empty">Заданий пока нет.</div>';return}
-  box.innerHTML=a.map((t,i)=>`<div class="task ${t.done?'done':''}">
-    <input type="checkbox" ${t.done?'checked':''} data-i="${i}">
-    <span class="txt">${esc(t.text)}</span>
-    <button class="del" data-del="${i}">Удалить</button>
-  </div>`).join('');
-  box.querySelectorAll('input[type=checkbox]').forEach(x=>x.onchange=()=>{
-    const a=tasks();a[+x.dataset.i].done=x.checked;saveTasks(a);renderTasks();
-  });
-  box.querySelectorAll('[data-del]').forEach(x=>x.onclick=()=>{
-    const a=tasks();a.splice(+x.dataset.del,1);saveTasks(a);renderTasks();
-  });
-}
+        function loadFallbackSchedule() {
+            scheduleData = getMockSchedule();
+            renderSchedule();
+            populateSubjects();
+        }
 
-document.getElementById('addTask').onclick=()=>{
-  const input=document.getElementById('taskInput'), text=input.value.trim();
-  if(!text)return;
-  const a=tasks();a.push({text,done:false});saveTasks(a);input.value='';renderTasks();
-};
-document.getElementById('taskInput').addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('addTask').click()});
-document.getElementById('refresh').onclick=refresh;
-document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{
-  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));b.classList.add('active');
-  document.getElementById('schedule').hidden=b.dataset.tab!=='schedule';
-  document.getElementById('tasks').hidden=b.dataset.tab!=='tasks';
-  if(b.dataset.tab==='tasks')renderTasks();
-});
-refresh();
-setInterval(refresh,5*60*1000);
-</script>
+        function parseScheduleFromHTML(html) {
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, 'text/html');
+            
+            // Стратегия 1: Ищем таблицы с расписанием
+            const tables = doc.querySelectorAll('table');
+            for (const table of tables) {
+                const result = parseTableSchedule(table);
+                if (result && Object.keys(result).length > 0) return result;
+            }
+            
+            // Стратегия 2: Ищем блоки с днями недели
+            const days = ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота'];
+            const result = {};
+            
+            for (const day of days) {
+                const dayElements = doc.querySelectorAll(`*:contains("${day}"), [class*="day"], [data-day]`);
+                // Упрощенный парсинг - ищем текст с днями
+                const allText = doc.body.innerText;
+                if (allText.includes(day)) {
+                    result[day] = [];
+                }
+            }
+            
+            // Если нашли хотя бы один день, пробуем извлечь данные
+            if (Object.keys(result).length > 0) {
+                return parseScheduleByDays(doc, result);
+            }
+            
+            return null;
+        }
+
+        function parseTableSchedule(table) {
+            const rows = table.querySelectorAll('tr');
+            if (rows.length < 2) return null;
+            
+            const result = {};
+            const days = ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота'];
+            
+            // Пытаемся определить структуру таблицы
+            const firstRow = rows[0];
+            const cells = firstRow.querySelectorAll('th, td');
+            
+            // Если первая строка содержит дни недели
+            const headerTexts = Array.from(cells).map(c => c.textContent.trim());
+            const hasDaysInHeader = headerTexts.some(h => days.some(d => h.includes(d)));
+            
+            if (hasDaysInHeader) {
+                // Парсим таблицу где дни в заголовке
+                for (let i = 1; i < rows.length; i++) {
+                    const row = rows[i];
+                    const rowCells = row.querySelectorAll('td');
+                    
+                    for (let j = 0; j < rowCells.length && j < days.length; j++) {
+                        const cell = rowCells[j];
+                        const text = cell.textContent.trim();
+                        if (text && text !== '-') {
+                            const day = days[j];
+                            if (!result[day]) result[day] = [];
+                            
+                            const lesson = parseLessonFromText(text);
+                            if (lesson) result[day].push(lesson);
+                        }
+                    }
+                }
+            } else {
+                // Парсим таблицу где дни в первом столбце
+                for (let i = 0; i < rows.length; i++) {
+                    const row = rows[i];
+                    const cells = row.querySelectorAll('td, th');
+                    if (cells.length === 0) continue;
+                    
+                    const firstCell = cells[0].textContent.trim();
+                    const day = days.find(d => firstCell.includes(d));
+                    
+                    if (day) {
+                        result[day] = [];
+                        for (let j = 1; j < cells.length; j++) {
+                            const text = cells[j].textContent.trim();
+                            if (text && text !== '-') {
+                                const lesson = parseLessonFromText(text);
+                                if (lesson) result[day].push(lesson);
+                            }
+                        }
+                    }
+                }
+            }
+            
+            return result;
+        }
+
+        function parseLessonFromText(text) {
+            // Пытаемся извлечь время, предмет и аудиторию из текста
+            const timeMatch = text.match(/(\d{1,2}[:.]\d{2})\s*[-–—]\s*(\d{1,2}[:.]\d{2})/);
+            const roomMatch = text.match(/ауд\.?\s*(\d+|[а-яА-ЯёЁ\s]+)/i) || text.match(/каб\.?\s*(\d+|[а-яА-ЯёЁ\s]+)/i);
+            
+            let time = '';
+            let subject = text;
+            let room = '';
+            
+            if (timeMatch) {
+                time = `${timeMatch[1]} - ${timeMatch[2]}`;
+                subject = text.replace(timeMatch[0], '').trim();
+            }
+            
+            if (roomMatch) {
+                room = roomMatch[1].trim();
+                subject = subject.replace(roomMatch[0], '').trim();
+            }
+            
+            // Очищаем предмет от лишних символов
+            subject = subject.replace(/\s+/g, ' ').trim();
+            
+            if (!subject || subject.length < 2) return null;
+            
+            return {
+                time: time || 'Время не указано',
+                subject: subject,
+                room: room || '—'
+            };
+        }
+
+        function parseScheduleByDays(doc, initialResult) {
+            // Дополнительная логика для извлечения данных по дням
+            const text = doc.body.innerText;
+            const lines = text.split('\n').map(l => l.trim()).filter(l => l);
+            
+            const result = {};
+            let currentDay = null;
+            
+            for (const line of lines) {
+                const days = ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота'];
+                const foundDay = days.find(d => line.includes(d));
+                
+                if (foundDay) {
+                    currentDay = foundDay;
+                    result[currentDay] = [];
+                } else if (currentDay && line.length > 3) {
+                    const lesson = parseLessonFromText(line);
+                    if (lesson) result[currentDay].push(lesson);
+                }
+            }
+            
+            return result;
+        }
+
+        function getMockSchedule() {
+            return {
+                "Понедельник": [
+                    { time: "09:00 - 10:30", subject: "Математика", room: "305" },
+                    { time: "10:40 - 12:10", subject: "Физика", room: "210" }
+                ],
+                "Вторник": [
+                    { time: "09:00 - 10:30", subject: "Информатика", room: "404" },
+                    { time: "11:00 - 12:30", subject: "История", room: "101" }
+                ],
+                "Среда": [
+                    { time: "09:00 - 10:30", subject: "Английский язык", room: "202" },
+                    { time: "10:40 - 12:10", subject: "Русский язык", room: "303" }
+                ],
+                "Четверг": [ { time: "09:00 - 10:30", subject: "Математика", room: "305" } ],
+                "Пятница": [ { time: "09:00 - 10:30", subject: "Физкультура", room: "Спортзал" } ]
+            };
+        }
+
+        function renderSchedule() {
+            const container = document.getElementById('schedule-container');
+            if (!scheduleData) return;
+
+            let html = '<div class="grid grid-cols-1 md:grid-cols-2 gap-4">';
+            for (const [day, lessons] of Object.entries(scheduleData)) {
+                html += `<div class="border rounded-lg p-4 bg-gray-50">
+                    <h3 class="font-bold text-blue-600 mb-2">${day}</h3>`;
+                if (lessons.length === 0) {
+                    html += `<p class="text-gray-400 text-sm">Пар нет</p>`;
+                } else {
+                    lessons.forEach(l => {
+                        html += `<div class="mb-2 text-sm">
+                            <span class="font-semibold">${l.time}</span><br>
+                            <span class="text-gray-700">${l.subject}</span> 
+                            <span class="text-gray-400">(Ауд. ${l.room})</span>
+                        </div>`;
+                    });
+                }
+                html += `</div>`;
+            }
+            html += '</div>';
+            container.innerHTML = html;
+        }
+
+        function populateSubjects() {
+            const select = document.getElementById('hw-subject');
+            select.innerHTML = '<option value="">-- Выберите предмет --</option>';
+            
+            let subjects = new Set();
+            if (scheduleData) {
+                Object.values(scheduleData).flat().forEach(lesson => subjects.add(lesson.subject));
+            }
+            if (subjects.size === 0) {
+                fallbackSubjects.forEach(sub => subjects.add(sub));
+            }
+
+            Array.from(subjects).sort().forEach(sub => {
+                const option = document.createElement('option');
+                option.value = sub;
+                option.textContent = sub;
+                select.appendChild(option);
+            });
+        }
+
+        function openModal() {
+            populateSubjects();
+            document.getElementById('hw-modal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('hw-modal').classList.remove('active');
+            document.getElementById('hw-form').reset();
+        }
+
+        function addHomework(e) {
+            e.preventDefault();
+            const subject = document.getElementById('hw-subject').value;
+            const task = document.getElementById('hw-task').value;
+            const date = document.getElementById('hw-date').value;
+
+            if (!subject || !task || !date) return;
+
+            let homeworks = JSON.parse(localStorage.getItem('hw_163') || '[]');
+            homeworks.push({ subject, task, date, id: Date.now() });
+            localStorage.setItem('hw_163', JSON.stringify(homeworks));
+            
+            closeModal();
+            renderHomework();
+        }
+
+        function deleteHomework(id) {
+            let homeworks = JSON.parse(localStorage.getItem('hw_163') || '[]');
+            homeworks = homeworks.filter(hw => hw.id !== id);
+            localStorage.setItem('hw_163', JSON.stringify(homeworks));
+            renderHomework();
+        }
+
+        function renderHomework() {
+            const list = document.getElementById('homework-list');
+            const homeworks = JSON.parse(localStorage.getItem('hw_163') || '[]');
+            
+            if (homeworks.length === 0) {
+                list.innerHTML = '<p class="text-gray-400 text-center py-4">Заданий пока нет 🎉</p>';
+                return;
+            }
+
+            homeworks.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+            list.innerHTML = homeworks.map(hw => `
+                <div class="border-l-4 border-blue-500 bg-white p-4 rounded shadow-sm flex justify-between items-center">
+                    <div>
+                        <div class="font-bold text-blue-600">${hw.subject}</div>
+                        <div class="text-gray-700">${hw.task}</div>
+                        <div class="text-xs text-gray-400 mt-1">Сдать до: ${new Date(hw.date).toLocaleDateString('ru-RU')}</div>
+                    </div>
+                    <button onclick="deleteHomework(${hw.id})" class="text-red-500 hover:text-red-700 text-xl font-bold">×</button>
+                </div>
+            `).join('');
+        }
+
+        function exportHomework() {
+            const homeworks = JSON.parse(localStorage.getItem('hw_163') || '[]');
+            
+            if (homeworks.length === 0) {
+                alert('Нет заданий для экспорта');
+                return;
+            }
+
+            let csv = '\uFEFFПредмет;Задание;Дата сдачи\n';
+            homeworks.forEach(hw => {
+                csv += `"${hw.subject}";"${hw.task}";"${new Date(hw.date).toLocaleDateString('ru-RU')}"\n`;
+            });
+
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            link.setAttribute('href', url);
+            link.setAttribute('download', `задания_группа_163_${new Date().toLocaleDateString('ru-RU')}.csv`);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchSchedule();
+            renderHomework();
+            setInterval(fetchSchedule, 300000);
+        });
+    </script>
 </body>
 </html>
