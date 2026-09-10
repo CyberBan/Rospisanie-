@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Группа 163 — расписание и задания</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#0b0d12;color:#f2f4f8}
+.wrap{max-width:1000px;margin:auto;padding:24px}.top{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}
+h1{margin:0;font-size:28px}.muted{color:#8e96a3;font-size:13px}
+button{border:1px solid #2b3140;background:#171b24;color:#fff;border-radius:12px;padding:10px 14px;cursor:pointer}
+button:hover{background:#202634}.tabs{display:flex;gap:8px;margin:22px 0;flex-wrap:wrap}.tab.active{background:#fff;color:#0b0d12}
+.panel{background:#11151d;border:1px solid #252b37;border-radius:18px;padding:18px;margin-bottom:18px}
+.status{padding:10px 12px;border-radius:10px;background:#171c26;color:#aeb6c3;font-size:13px;margin-bottom:14px}
+.day{border:1px solid #262d39;border-radius:15px;margin:12px 0;overflow:hidden}.day.today{border-color:#6f7cff}
+.dayhead{padding:13px 15px;background:#171c25;display:flex;justify-content:space-between;gap:10px}
+.badge{font-size:11px;padding:4px 8px;border-radius:99px;background:#28305a;color:#bfc6ff}.lessons{padding:0 15px}
+.lesson{padding:14px 0;border-bottom:1px solid #242a34;display:grid;grid-template-columns:70px 1fr;gap:14px}.lesson:last-child{border-bottom:0}
+.time{color:#8e96a3;font-variant-numeric:tabular-nums}.subject{font-weight:650}.teacher,.room{color:#929aa7;font-size:13px;margin-top:4px}
+.empty{padding:28px;text-align:center;color:#8e96a3}
+.taskrow{display:flex;gap:10px;margin-bottom:14px}.taskrow input{flex:1;min-width:0;background:#0b0e14;border:1px solid #2b3140;color:#fff;border-radius:12px;padding:12px}
+.task{display:flex;align-items:center;gap:10px;padding:11px 0;border-bottom:1px solid #242a34}.task.done .txt{text-decoration:line-through;color:#737b89}.del{margin-left:auto;padding:6px 9px}
+.small{font-size:12px;color:#7f8794}
+pre{white-space:pre-wrap;word-break:break-word;color:#c7ced9;font-size:12px;max-height:300px;overflow:auto}
+@media(max-width:600px){.wrap{padding:14px}h1{font-size:23px}.lesson{grid-template-columns:58px 1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <div><h1>Группа 163</h1><div class="muted">Расписание + задания</div></div>
+    <button id="refresh">↻ Обновить</button>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" data-tab="schedule">Расписание</button>
+    <button class="tab" data-tab="tasks">Задания</button>
+  </div>
+
+  <section id="schedule" class="panel">
+    <div id="status" class="status">Загрузка расписания…</div>
+    <div id="scheduleBox"><div class="empty">Подождите…</div></div>
+    <div class="small">Источник: spbti.ru/studentam/schedule/451 · обновление каждые 5 минут.</div>
+  </section>
+
+  <section id="tasks" class="panel" hidden>
+    <div class="taskrow">
+      <input id="taskInput" placeholder="Например: сделать лабораторную по химии">
+      <button id="addTask">Добавить</button>
+    </div>
+    <div id="tasksBox"></div>
+  </section>
+</div>
+
+<script>
+const SOURCE='https://spbti.ru/studentam/schedule/451';
+const CACHE='group163_schedule_v1';
+const TASKS='group163_tasks_v1';
+
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function saveCache(html){try{localStorage.setItem(CACHE,JSON.stringify({time:Date.now(),html}))}catch{}}
+function loadCache(){try{return JSON.parse(localStorage.getItem(CACHE)||'null')}catch{return null}}
+
+async function getSource(){
+  const urls=[
+    SOURCE,
+    'https://api.allorigins.win/raw?url='+encodeURIComponent(SOURCE),
+    'https://corsproxy.io/?url='+encodeURIComponent(SOURCE)
+  ];
+  let last;
+  for(const u of urls){
+    try{
+      const r=await fetch(u,{cache:'no-store'});
+      if(!r.ok) throw new Error('HTTP '+r.status);
+      const t=await r.text();
+      if(t && t.length>500) return t;
+    }catch(e){last=e}
+  }
+  throw last||new Error('Не удалось загрузить расписание');
+}
+
+function parseSchedule(raw){
+  const doc=new DOMParser().parseFromString(raw,'text/html');
+  // Remove navigation/scripts and collect visible text.
+  doc.querySelectorAll('script,style,noscript,svg,nav,header,footer').forEach(x=>x.remove());
+
+  // First try tables — university schedules are commonly published as tables.
+  const tables=[...doc.querySelectorAll('table')];
+  let best=tables.sort((a,b)=>b.innerText.length-a.innerText.length)[0];
+  if(best && best.innerText.trim().length>80){
+    const rows=[...best.querySelectorAll('tr')].map(tr=>[...tr.querySelectorAll('th,td')].map(x=>x.innerText.replace(/\s+/g,' ').trim()).filter(Boolean)).filter(r=>r.length);
+    if(rows.length) return renderTable(rows);
+  }
+
+  // Fallback: show the useful text from the page, with links preserved as plain text.
+  const text=doc.body?.innerText?.replace(/\n{3,}/g,'\n\n').trim()||'';
+  return `<div class="empty">Не удалось автоматически распознать таблицу расписания.<br><br><pre>${esc(text.slice(0,12000))}</pre></div>`;
+}
+
+function renderTable(rows){
+  let html='<div style="overflow:auto"><table style="width:100%;border-collapse:collapse;font-size:14px">';
+  rows.forEach((r,i)=>{
+    html+='<tr>'+r.map(c=>`<${i===0?'th':'td'} style="text-align:left;padding:10px;border-bottom:1px solid #252b37;vertical-align:top">${esc(c)}</${i===0?'th':'td'}>`).join('')+'</tr>';
+  });
+  return html+'</table></div>';
+}
+
+async function refresh(){
+  const status=document.getElementById('status');
+  status.textContent='Загрузка расписания…';
+  try{
+    const raw=await getSource();
+    const rendered=parseSchedule(raw);
+    saveCache(rendered);
+    document.getElementById('scheduleBox').innerHTML=rendered;
+    status.textContent='Расписание обновлено: '+new Date().toLocaleString('ru-RU');
+  }catch(e){
+    const c=loadCache();
+    if(c){
+      document.getElementById('scheduleBox').innerHTML=c.html;
+      status.textContent='Интернет недоступен. Показана последняя сохранённая версия.';
+    }else{
+      document.getElementById('scheduleBox').innerHTML='<div class="empty">Не удалось загрузить расписание.<br>Откройте страницу с интернетом и нажмите «Обновить».</div>';
+      status.textContent='Ошибка загрузки расписания.';
+    }
+  }
+}
+
+function tasks(){try{return JSON.parse(localStorage.getItem(TASKS)||'[]')}catch{return[]}}
+function saveTasks(a){localStorage.setItem(TASKS,JSON.stringify(a))}
+function renderTasks(){
+  const box=document.getElementById('tasksBox'), a=tasks();
+  if(!a.length){box.innerHTML='<div class="empty">Заданий пока нет.</div>';return}
+  box.innerHTML=a.map((t,i)=>`<div class="task ${t.done?'done':''}">
+    <input type="checkbox" ${t.done?'checked':''} data-i="${i}">
+    <span class="txt">${esc(t.text)}</span>
+    <button class="del" data-del="${i}">Удалить</button>
+  </div>`).join('');
+  box.querySelectorAll('input[type=checkbox]').forEach(x=>x.onchange=()=>{
+    const a=tasks();a[+x.dataset.i].done=x.checked;saveTasks(a);renderTasks();
+  });
+  box.querySelectorAll('[data-del]').forEach(x=>x.onclick=()=>{
+    const a=tasks();a.splice(+x.dataset.del,1);saveTasks(a);renderTasks();
+  });
+}
+
+document.getElementById('addTask').onclick=()=>{
+  const input=document.getElementById('taskInput'), text=input.value.trim();
+  if(!text)return;
+  const a=tasks();a.push({text,done:false});saveTasks(a);input.value='';renderTasks();
+};
+document.getElementById('taskInput').addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('addTask').click()});
+document.getElementById('refresh').onclick=refresh;
+document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));b.classList.add('active');
+  document.getElementById('schedule').hidden=b.dataset.tab!=='schedule';
+  document.getElementById('tasks').hidden=b.dataset.tab!=='tasks';
+  if(b.dataset.tab==='tasks')renderTasks();
+});
+refresh();
+setInterval(refresh,5*60*1000);
+</script>
+</body>
+</html>
